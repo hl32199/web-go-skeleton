@@ -14,6 +14,8 @@ func InitRouter() *gin.Engine {
 	router.POST("/test/log",controllers.TestLog)
 	router.GET("/init",controllers.Migration)
 	router.GET("/season/add",controllers.AddSeason)
+	router.GET("/test/redis",controllers.TestRedis)
+
 	return router
 
 }

@@ -22,7 +22,7 @@ func AddSeason(ctx *gin.Context)  {
 
 	if res.Error != nil {
 		fmt.Println(res.Error)
-		ReturnError(ctx,self_errors.ErrServiceNotAvilable)
+		ReturnError(ctx,self_errors.ErrServiceNotAvailable)
 		return
 	}
 

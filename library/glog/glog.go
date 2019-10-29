@@ -75,7 +75,6 @@ func (l *Glogger) register(output Output) error {
 }
 
 func (l *Glogger) write(level int, msg string) {
-	fmt.Print(msg)
 	buf := l.formatHeader(level)
 	buf = append(buf, msg...)
 	if buf[len(buf)-1] != '\n' {
@@ -183,10 +182,42 @@ func RegisterOutput(output Output) error {
 	return logger.register(output)
 }
 
+func Debug(v...interface{}) {
+	logger.write(LevelDebug,fmt.Sprintln(v...))
+}
+
+func Debugf(format string,v...interface{}) {
+	logger.write(LevelDebug,fmt.Sprintf(format,v...))
+}
+
+func Info(v...interface{}) {
+	logger.write(LevelInfo,fmt.Sprintln(v...))
+}
+
+func Infof(format string,v...interface{}) {
+	logger.write(LevelInfo,fmt.Sprintf(format,v...))
+}
+
+func Warning(v...interface{}) {
+	logger.write(LevelWarning,fmt.Sprintln(v...))
+}
+
+func Warningf(format string,v...interface{}) {
+	logger.write(LevelWarning,fmt.Sprintf(format,v...))
+}
+
 func Error(v...interface{}) {
 	logger.write(LevelError,fmt.Sprintln(v...))
 }
 
 func Errorf(format string,v...interface{}) {
 	logger.write(LevelError,fmt.Sprintf(format,v...))
+}
+
+func Fatal(v...interface{}) {
+	logger.write(LevelFatal,fmt.Sprintln(v...))
+}
+
+func Fatalf(format string,v...interface{}) {
+	logger.write(LevelFatal,fmt.Sprintf(format,v...))
 }

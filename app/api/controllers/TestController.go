@@ -7,6 +7,9 @@ import (
 	"web-go-skeleton/app/api/self_errors"
 	"log"
 	"web-go-skeleton/library/glog"
+	"web-go-skeleton/app/api/components"
+	"time"
+	"math/rand"
 )
 
 type Params struct {
@@ -26,7 +29,8 @@ func TestIndex(ctx *gin.Context){
 	res := models.DB.Find(&seasons)
 
 	if res.Error != nil {
-		ReturnError(ctx,self_errors.ErrServiceNotAvilable)
+		ReturnError(ctx,self_errors.ErrServiceNotAvailable)
+		return
 	}
 
 	ReturnSuccess(ctx,seasons)
@@ -50,7 +54,38 @@ func TestLog(ctx *gin.Context)  {
 	fmt.Fprintln(gin.DefaultWriter,"aaaaaaaabbbb")
 	log.Println("log.Println")
 	glog.Error("test glog error")
+	glog.Info("test glog info")
+	return
+}
 
+func TestRedis(ctx *gin.Context)  {
+	//err := components.Redis.Set("hello", "world", 0).Err()
+	//if err != nil {
+	//	glog.Error(err)
+	//	ReturnError(ctx,self_errors.ErrServiceNotAvilable)
+	//}
+	var ch = make(chan string,10)
+	var list = make([]string,0,100)
+
+	for i:=0;i<100;i++ {
+		go func(i int) {
+			randNum := rand.Intn(10)
+			time.Sleep(time.Duration(randNum) * time.Second)
+			val, err := components.Redis.Get("hello").Result()
+			if err != nil {
+				glog.Error(err)
+			}
+
+			glog.Infof("%d-%d-%s",i,randNum,val)
+			ch<-val
+		}(i)
+	}
+
+	for i:=0;i<100;i++{
+		list = append(list,<-ch)
+	}
+
+	ReturnSuccess(ctx)
 	return
 }
 

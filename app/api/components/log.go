@@ -2,12 +2,14 @@ package components
 
 import "web-go-skeleton/library/glog"
 
-func init()  {
+func InitLogger()  {
 	//注册文件日志
-	fileLogConfig := glog.FileOutputConfig{Path:"./logs/",FileNamePrefix:"app"}
+	path := Config.MustValue("log", "path","./logs/")
+	fileNamePrefix := Config.MustValue("log", "file_name_prefix","app")
+	fileLogConfig := glog.FileOutputConfig{Path:path,FileNamePrefix:fileNamePrefix}
 	fileLogger := glog.NewFileOutput(fileLogConfig)
 	glog.RegisterOutput(fileLogger)
-	//注册标注错误日志
-	stderr := glog.NewStderr()
-	glog.RegisterOutput(stderr)
+	//注册标准输出日志
+	stdout := glog.NewStdout()
+	glog.RegisterOutput(stdout)
 }
